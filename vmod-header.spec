@@ -1,6 +1,6 @@
 Summary: Header VMOD for Varnish VCL
 Name: vmod-header
-Version: 0.3
+Version: 0.31
 Release: 1%{?dist}
 License: BSD
 Group: System Environment/Daemons
