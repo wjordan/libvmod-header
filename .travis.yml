@@ -1,0 +1,13 @@
+language: c
+compiler:
+  - clang
+  - gcc
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install python-docutils
+  - git clone https://github.com/varnish/Varnish-Cache
+  - cd Varnish-Cache && ./autogen.sh && ./configure --prefix=/usr &&
+    make && sudo make install && cd ..
+  - ./autogen.sh
+script:
+  - ./configure && make && make check
