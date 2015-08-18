@@ -63,40 +63,6 @@ header_init_re(struct vmod_priv *priv, const char *s)
 	}
 }
 
-#if !defined(VRT_MINOR_VERSION) || !defined(VRT_MAJOR_VERSION) || \
-    (VRT_MAJOR_VERSION == 2 && VRT_MINOR_VERSION < 2) || \
-    (VRT_MAJOR_VERSION < 2)
-static struct http *
-VRT_selecthttp(const struct vrt_ctx *ctx, enum gethdr_e where)
-{
-	struct http *hp;
-
-	CHECK_OBJ_NOTNULL(ctx, VRT_CTX_MAGIC);
-	switch (where) {
-	case HDR_REQ:
-		hp = ctx->http_req;
-		break;
-	case HDR_BEREQ:
-		hp = ctx->http_bereq;
-		break;
-	case HDR_BERESP:
-		hp = ctx->http_beresp;
-		break;
-	case HDR_RESP:
-		hp = ctx->http_resp;
-		break;
-#if !defined(VRT_MAJOR_VERSION) || (VRT_MAJOR_VERSION < 2)
-	case HDR_OBJ:
-		hp = ctx->http_obj;
-		break;
-#endif
-	default:
-		WRONG("VRT_selecthttp 'where' invalid");
-	}
-	return (hp);
-}
-#endif
-
 /*
  * Returns true if the *hdr header is the one pointed to by *hh.
  *
