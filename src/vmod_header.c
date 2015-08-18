@@ -193,10 +193,11 @@ header_http_cphdr(const struct vrt_ctx *ctx,
  * vmod entrypoint. Sets up the header mutex.
  */
 int
-event_function(VRT_CTX __attribute__((unused)),
-		struct vmod_priv *priv __attribute__((unused)),
-		enum vcl_event_e e)
+event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
 {
+	(void)ctx;
+	(void)priv;
+
 	if (e != VCL_EVENT_LOAD)
 		return (0);
 	assert(pthread_mutex_init(&header_mutex, NULL) == 0);
@@ -268,7 +269,9 @@ vmod_remove(const struct vrt_ctx *ctx, struct vmod_priv *priv, VCL_HEADER hdr, V
 }
 
 VCL_STRING __match_proto__()
-vmod_version(const struct vrt_ctx *ctx __attribute__((unused)))
+vmod_version(VRT_CTX)
 {
+	(void)ctx;
+
 	return VERSION;
 }
