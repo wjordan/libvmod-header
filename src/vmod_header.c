@@ -90,7 +90,8 @@ header_http_IsHdr(const txt *hh, const char *hdr)
  * header, a match is returned.
  */
 static int
-header_http_match(const struct vrt_ctx *ctx, const struct http *hp, unsigned u, void *re, const char *hdr)
+header_http_match(VRT_CTX, const struct http *hp, unsigned u, void *re,
+    const char *hdr)
 {
 	const char *start;
 	unsigned l;
@@ -100,26 +101,26 @@ header_http_match(const struct vrt_ctx *ctx, const struct http *hp, unsigned u, 
 
 	Tcheck(hp->hd[u]);
 	if (hp->hd[u].b == NULL)
-		return 0;
+		return (0);
 
 	l = hdr[0];
 
 	if (!header_http_IsHdr(&hp->hd[u], hdr))
-		return 0;
+		return (0);
 
 	if (re == NULL)
-		return 1;
+		return (1);
 
 	start = hp->hd[u].b + l;
 	while (*start != '\0' && *start == ' ')
 		start++;
 
 	if (!*start)
-		return 0;
+		return (0);
 	if (VRT_re_match(ctx, start, re))
-		return 1;
+		return (1);
 
-	return 0;
+	return (0);
 }
 
 /*
@@ -127,7 +128,8 @@ header_http_match(const struct vrt_ctx *ctx, const struct http *hp, unsigned u, 
  * expression *re.
  */
 static unsigned
-header_http_findhdr(const struct vrt_ctx *ctx, const struct http *hp, const char *hdr, void *re)
+header_http_findhdr(VRT_CTX, const struct http *hp, const char *hdr,
+    void *re)
 {
         unsigned u;
 
@@ -143,7 +145,7 @@ header_http_findhdr(const struct vrt_ctx *ctx, const struct http *hp, const char
  * matches *re. Same as http_Unset(), plus regex.
  */
 static void
-header_http_Unset(const struct vrt_ctx *ctx, struct http *hp, const char *hdr, void *re)
+header_http_Unset(VRT_CTX, struct http *hp, const char *hdr, void *re)
 {
 	unsigned u, v;
 
@@ -170,10 +172,8 @@ header_http_Unset(const struct vrt_ctx *ctx, struct http *hp, const char *hdr, v
  * XXX: the future.
  */
 static void
-header_http_cphdr(const struct vrt_ctx *ctx,
-		  const struct http *hp,
-		  const char *hdr,
-		  VCL_HEADER dst)
+header_http_cphdr(VRT_CTX, const struct http *hp, const char *hdr,
+    VCL_HEADER dst)
 {
         unsigned u;
 	const char *p;
@@ -205,7 +205,7 @@ event_function(VRT_CTX, struct vmod_priv *priv, enum vcl_event_e e)
 }
 
 VCL_VOID __match_proto__()
-vmod_append(const struct vrt_ctx *ctx, VCL_HEADER hdr, const char *fmt, ...)
+vmod_append(VRT_CTX, VCL_HEADER hdr, const char *fmt, ...)
 {
 	va_list ap;
 	struct http *hp;
@@ -218,14 +218,15 @@ vmod_append(const struct vrt_ctx *ctx, VCL_HEADER hdr, const char *fmt, ...)
 	va_start(ap, fmt);
 	b = VRT_String(hp->ws, hdr->what + 1, fmt, ap);
 	if (b == NULL)
-		VSLb(ctx->vsl, SLT_LostHeader, "vmod_header: %s", hdr->what + 1);
+		VSLb(ctx->vsl, SLT_LostHeader, "vmod_header: %s",
+		    hdr->what + 1);
 	else
  		http_SetHeader(hp, b);
 	va_end(ap);
 }
 
 VCL_STRING __match_proto__()
-vmod_get(const struct vrt_ctx *ctx, struct vmod_priv *priv, VCL_HEADER hdr, VCL_STRING s)
+vmod_get(VRT_CTX, struct vmod_priv *priv, VCL_HEADER hdr, VCL_STRING s)
 {
 	struct http *hp;
 	unsigned u;
@@ -236,17 +237,16 @@ vmod_get(const struct vrt_ctx *ctx, struct vmod_priv *priv, VCL_HEADER hdr, VCL_
 	
 	hp = VRT_selecthttp(ctx, hdr->where);
 	u = header_http_findhdr(ctx, hp, hdr->what, priv->priv);
-	if (u == 0) {
-		return NULL;
-	}
+	if (u == 0)
+		return (NULL);
 	p = hp->hd[u].b + hdr->what[0];
 	while (*p == ' ' || *p == '\t')
 		p++;
-	return p;
+	return (p);
 }
 
 VCL_VOID  __match_proto__()
-vmod_copy(const struct vrt_ctx *ctx, VCL_HEADER src, VCL_HEADER dst)
+vmod_copy(VRT_CTX, VCL_HEADER src, VCL_HEADER dst)
 {
 	struct http *src_hp;
 
@@ -257,7 +257,7 @@ vmod_copy(const struct vrt_ctx *ctx, VCL_HEADER src, VCL_HEADER dst)
 }
 
 VCL_VOID  __match_proto__()
-vmod_remove(const struct vrt_ctx *ctx, struct vmod_priv *priv, VCL_HEADER hdr, VCL_STRING s)
+vmod_remove(VRT_CTX, struct vmod_priv *priv, VCL_HEADER hdr, VCL_STRING s)
 {
 	struct http *hp;
 
@@ -273,5 +273,5 @@ vmod_version(VRT_CTX)
 {
 	(void)ctx;
 
-	return VERSION;
+	return (VERSION);
 }
