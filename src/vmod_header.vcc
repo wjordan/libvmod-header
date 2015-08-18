@@ -1,5 +1,5 @@
 $Module header 3 Header VMOD for Varnish
-$Init init_function
+$Event event_function
 $Function VOID append(HEADER,STRING_LIST)
 $Function VOID remove(PRIV_CALL,HEADER,STRING)
 $Function STRING get(PRIV_CALL,HEADER,STRING)

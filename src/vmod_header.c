@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
+#include "vcl.h"
 #include "vrt.h"
 #include "cache/cache.h"
 
@@ -226,9 +227,11 @@ header_http_cphdr(const struct vrt_ctx *ctx,
  * vmod entrypoint. Sets up the header mutex.
  */
 int
-init_function(struct vmod_priv *priv __attribute__((unused)),
-	      const struct VCL_conf *conf __attribute__((unused)))
+event_function(VRT_CTX, struct vmod_priv *priv __attribute__((unused)),
+		enum vcl_event_e e)
 {
+	if (e != VCL_EVENT_LOAD)
+		return (0);
 	assert(pthread_mutex_init(&header_mutex, NULL) == 0);
 	return (0);
 }
