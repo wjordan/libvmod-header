@@ -1,6 +1,11 @@
 #!/usr/bin/make -f
 export DH_VERBOSE=1
 
+VMODDIR = $(shell pkg-config --variable=vmoddir varnishapi)
+
+override_dh_auto_configure:
+	./autogen.sh && dh_auto_configure -- VMODDIR="$(VMODDIR)"
+
 override_dh_gencontrol:
 	if [ -n "$$DEBIAN_OVERRIDE_BINARY_VERSION" ]; then \
 		dh_gencontrol -- -v$$DEBIAN_OVERRIDE_BINARY_VERSION; \

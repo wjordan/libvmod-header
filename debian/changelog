@@ -1,3 +1,9 @@
+libvmod-header (0.3+4.03-2) trusty; urgency=low
+
+  * Ubuntu package
+
+ -- Will Jordan <will@code.org>  Wed, 2 Sep 2015 13:22:00 -0700
+
 libvmod-header (0.3) unstable; urgency=low
 
   * First version
