@@ -6,12 +6,15 @@ Build-Depends: debhelper (>= 7),
  build-essential,
  pkg-config,
  python-docutils,
+ autoconf,
+ automake,
+ libtool,
  varnish (>= 4.0.2),
  libvarnishapi-dev (>= 4.0.2)
 Standards-Version: 3.8.1
 Vcs-Git: git://github.com/varnish/libvmod-header.git
 
 Package: libvmod-header
-Architecture: any
+Architecture: amd64
 Depends: varnish (>= 4.0.2), ${misc:Depends}
 Description: header vmod for Varnish
